@@ -1,0 +1,831 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Search Page</title>
+    <style>
+        /* Styles for the header section */
+        header {
+            background-color: #f2f2f2;
+            padding: 10px;
+        }
+
+        /* Styles for the search bar section */
+        .search-bar {
+            text-align: center;
+            margin: 50px auto;
+        }
+
+        .search-bar input[type="text"] {
+            width: 500px;
+            height: 30px;
+            padding: 5px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .search-bar input[type="submit"] {
+            padding: 5px 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Styles for the search results section */
+        .search-results {
+            margin: 0 auto;
+            width: 80%;
+        }
+
+        .search-results h2 {
+            margin-bottom: 10px;
+        }
+
+        .search-results p {
+            margin-bottom: 20px;
+        }
+
+        /* Styles for the link box section */
+        .link-box {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            max-height: 350px;
+            overflow: auto;
+        }
+
+        .link-box::-webkit-scrollbar {
+            display: none;
+        }
+
+        .link-item {
+            width: 100px;
+            margin: 10px;
+            padding: 10px;
+            text-align: center;
+            background-color: #f2f2f2;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            position: relative;
+            max-height: 350px;
+        }
+
+
+        .link-item img {
+            width: 65px;
+            height: 65px;
+            margin-bottom: 10px;
+        }
+
+        .link-item a,
+        a {
+            text-decoration: none;
+            color: #333;
+            font-weight: bold;
+        }
+
+        #youtubeLinkBox .link-item,
+        #indiatalk .link-item {
+            width: 150px;
+            height: 100px;
+        }
+
+        #youtubeLinkBox .link-item img,
+        #indiatalk .link-item img {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+    <style>
+        /* Styles for other sections */
+
+        /* ... */
+
+        /* Styles for the add link section */
+        .add-link-button {
+            text-align: center;
+            margin: 30px auto;
+
+        }
+
+        .add-link-button h3 {
+            display: inline-block;
+            margin: 10px;
+        }
+
+        .add-link-button input[type="submit"] {
+
+            padding: 5px 10px;
+            font-size: 16px;
+            background-color: #4CAF50;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        /* Styles for the pop-up form */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: #f2f2f2;
+            margin: 20% auto;
+            padding: 20px;
+            width: 400px;
+            border-radius: 5px;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .add-link-form input[type="text"],
+        .add-link-form input[type="url"] {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 5px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .add-link-form input[type="submit"] {
+            width: auto;
+            margin-top: 10px;
+        }
+
+        .sort-btn {
+            position: absolute;
+            right: 5px;
+            top: 5px;
+            cursor: pointer;
+
+        }
+
+        .sort-btn div {
+            display: none;
+            width: max-content;
+        }
+
+        .sort-btn div button {
+            margin: 2px;
+            cursor: pointer;
+        }
+
+        .sort-btn:hover div {
+            display: block;
+        }
+    </style>
+    <style>
+        .row {
+
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .col {
+            display: inline-block;
+            max-width: 449px;
+
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            padding: 4px;
+            margin: 3px;
+
+        }
+
+        .link-item .edit-link-btn {
+            display: none;
+        }
+
+        .link-item:hover .edit-link-btn {
+            display: inline-block;
+        }
+
+        /* Styles for the edit button */
+        .edit-link-btn {
+            background-color: #ccc;
+            color: #fff;
+            border: none;
+            padding: 5px 10px;
+            margin-left: 5px;
+            font-size: 12px;
+            cursor: pointer;
+            margin: 2px;
+        }
+
+        .d-none {
+            display: none;
+        }
+
+        h3 {
+            padding-left: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+
+    <div class="search-bar">
+        <form action="https://www.google.com/search" method="get">
+            <input type="text" name="q" placeholder="Search..." />
+            <input type="submit" value="Search" />
+        </form>
+    </div>
+    <div class="row">
+
+        <div class="col">
+            <div class="add-link-button">
+                <h3>Websites</h3>
+                <input type="submit" value="Add New" id="openModalBtn" />
+            </div>
+            <div class="link-box" id="linkBox">
+                <!-- Links will be dynamically added here -->
+            </div>
+        </div>
+        <div class="col">
+            <div class="add-link-button">
+                <h3>Talent Trip</h3>
+                <input type="submit" value="Add New" id="openModalBtnYouTube" />
+
+            </div>
+            <div class="link-box" id="youtubeLinkBox">
+
+            </div>
+        </div>
+        <div class="col">
+            <div class="add-link-button">
+                <h3>India's Talk</h3>
+                <input type="submit" value="Add New" id="openModalBtnindia" />
+            </div>
+            <div class="link-box" id="indiatalk">
+
+            </div>
+        </div>
+    </div>
+
+
+    <div id="myModal" class="modal">
+        <div class="modal-content">
+            <p> <span style="font-size: 18px;"> Add a new link</span>
+                <span class="close">&times;</span>
+            </p>
+            <form class="add-link-form">
+                <label for="linkName">Name</label>
+                <input type="text" id="linkName" placeholder="Link Name" />
+                <label for="linkURL">Url</label>
+                <input type="url" id="linkURL" placeholder="Link URL" />
+                <p id="modalerror" class="d-none" style="color: red;">The name and url in not valid ! provide valid</p>
+                <input type="submit" value="Save" id="addLinkBtn" />
+                <input type="reset" value="clear" />
+            </form>
+        </div>
+    </div>
+
+
+    <div id="myModalYouTube" class="modal">
+        <div class="modal-content">
+            <p> <span style="font-size: 18px;"> Add a new link</span>
+                <span class="close">&times;</span>
+            </p>
+            <form class="add-youtube-link-form add-link-form">
+                <label for="youtubeLinkName">Title</label>
+                <input type="text" id="youtubeLinkName" placeholder="Link Name" />
+                <label for="youtubeLinkURL">Url</label>
+                <input type="url" id="youtubeLinkURL" placeholder="YouTube Video URL" />
+                <input type="submit" value="Save" id="addYouTubeLinkBtn" />
+                <input type="reset" value="Clear" />
+            </form>
+        </div>
+    </div>
+
+    <div id="myModalYouTubeindia" class="modal">
+        <div class="modal-content">
+            <p> <span style="font-size: 18px;"> Add a new link</span>
+                <span class="close">&times;</span>
+            </p>
+            <form class="add-youtube-link-form-india add-link-form">
+                <label for="youtubeLinkName">Title</label>
+                <input type="text" id="youtubeLinkNameindia" placeholder="Link Name" />
+                <label for="youtubeLinkURL">Url</label>
+                <input type="url" id="youtubeLinkURLindia" placeholder="YouTube Video URL" />
+                <input type="submit" value="Save" id="addYouTubeLinkBtnindia" />
+                <input type="reset" value="Clear" />
+            </form>
+        </div>
+    </div>
+
+
+    <script>
+        // Other code
+
+        // Modal functionality
+        const openModalButton = document.getElementById('openModalBtn');
+        const modalerror = document.getElementById('modalerror');
+        const addYouTubeLinkBtn = document.getElementById('addYouTubeLinkBtn');
+        const openModalBtnindia = document.getElementById('openModalBtnindia');
+        const modal = document.getElementById('myModal');
+        const closeModal = document.getElementsByClassName('close');
+        const addLinkForm = document.querySelector('.add-link-form');
+
+
+        <!-- for youtube Video -->
+        let openModalBtnYouTube = document.getElementById('openModalBtnYouTube');
+        let myModalYouTubeindia = document.getElementById('myModalYouTubeindia');
+        let myModalYouTube = document.getElementById('myModalYouTube');
+
+
+        openModalButton.addEventListener('click', function () {
+            addLinkBtn.value = 'Save';
+            addLinkForm.reset()
+            modal.style.display = 'block';
+        });
+
+        closeModal[0].addEventListener('click', function () {
+            modal.style.display = 'none';
+        });
+
+        closeModal[1].addEventListener('click', function () {
+            myModalYouTube.style.display = 'none';
+        });
+        closeModal[2].addEventListener('click', function () {
+            myModalYouTubeindia.style.display = 'none';
+        });
+
+
+        window.addEventListener('click', function (event) {
+            if (event.target == modal) {
+                modal.style.display = 'none';
+            }
+            if (event.target == myModalYouTube) {
+                myModalYouTube.style.display = 'none';
+            }
+            if (event.target == myModalYouTubeindia) {
+                myModalYouTubeindia.style.display = 'none';
+            }
+        });
+
+        // Add new link form functionality
+
+
+
+
+        // Function to display links
+        function displayLinks(links) {
+            const linkBox = document.getElementById('linkBox');
+            linkBox.innerHTML = ''; // Clear existing links
+
+            for (let i = 0; i <= Object.keys(links).length; i++) {
+                let link = links[i]
+                const linkItem = document.createElement('div');
+                linkItem.classList.add('link-item');
+
+                const linkImage = document.createElement('img');
+                linkImage.src = link.icon;
+                linkItem.appendChild(linkImage);
+
+                const linkAnchor = document.createElement('a');
+                linkAnchor.href = link.url;
+                linkAnchor.textContent = link.name;
+                linkItem.appendChild(linkAnchor);
+
+                let btnBox = document.createElement('a');
+                btnBox.classList.add('sort-btn')
+                btnBox.innerText = "||"
+
+                let btndiv = document.createElement('div')
+
+                const editLinkButton = document.createElement('button');
+                editLinkButton.textContent = 'Edit';
+
+                const removeLinkButton = document.createElement('button');
+                removeLinkButton.classList.add('remove-link-btn');
+                removeLinkButton.textContent = 'remove';
+
+                editLinkButton.addEventListener('click', function () {
+                    editLink(`${i}`);
+                });
+
+                removeLinkButton.addEventListener('click', (d) => {
+                    console.log('askdfj')
+                    removeLink(i);
+
+                })
+
+                btndiv.appendChild(editLinkButton);
+                btndiv.appendChild(removeLinkButton);
+                btnBox.appendChild(btndiv);
+
+                linkItem.appendChild(btnBox);
+
+
+                linkBox.appendChild(linkItem);
+            };
+        }
+
+        // Function to save links to localStorage
+        function saveLinksToLocalStorage(links) {
+            localStorage.setItem('links', JSON.stringify(links));
+        }
+
+        // Function to retrieve links from localStorage
+        function getLinksFromLocalStorage() {
+            const linksData = localStorage.getItem('links');
+            return linksData ? JSON.parse(linksData) : [];
+        }
+
+        // Event listener for form submission
+        function getFavicon(link) {
+            const url = new URL(link);
+            const faviconURL = `${url.origin}/favicon.ico`;
+            return faviconURL;
+        }
+
+
+        addLinkForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const linkNameInput = document.getElementById('linkName');
+            const linkURLInput = document.getElementById('linkURL');
+
+            const linkName = linkNameInput.value;
+            const linkURL = linkURLInput.value;
+
+            if (linkName && linkURL) {
+                const link = {
+                    name: linkName,
+                    url: linkURL,
+                    icon: getFavicon(linkURL)
+                };
+
+                const links = getLinksFromLocalStorage();
+                links.push(link);
+
+                saveLinksToLocalStorage(links);
+
+                displayLinks(links);
+
+                linkNameInput.value = '';
+                linkURLInput.value = '';
+
+
+                modal.style.display = 'none';
+            } else {
+                modalerror.classList.toggle('d-none');
+                setTimeout(() => {
+                    modalerror.classList.toggle('d-none');
+                }, 5000)
+            }
+        });
+
+        // Event listener for displaying links on page load
+        document.addEventListener('DOMContentLoaded', function () {
+            const links = getLinksFromLocalStorage();
+            console.log('sdfk')
+            displayLinks(links);
+        });
+
+        function editLink(i) {
+            const links = getLinksFromLocalStorage();
+            const link = links[i];
+            if (link) {
+                console.log(link)
+                const linkNameInput = document.getElementById('linkName');
+                const linkURLInput = document.getElementById('linkURL');
+
+
+                linkNameInput.value = link.name;
+                linkURLInput.value = link.url;
+
+
+                const addLinkBtn = document.getElementById('addLinkBtn');
+                addLinkBtn.value = 'Update Link';
+                addLinkBtn.addEventListener('click', function (event) {
+                    event.preventDefault();
+
+                    const updatedLinkName = linkNameInput.value;
+                    const updatedLinkURL = linkURLInput.value;
+
+
+                    if (updatedLinkName && updatedLinkURL) {
+                        link.name = updatedLinkName;
+                        link.url = updatedLinkURL;
+
+                        modal.style.display = 'none'
+
+                        saveLinksToLocalStorage(links);
+                        displayLinks(links);
+
+                        linkNameInput.value = '';
+                        linkURLInput.value = '';
+
+                        addLinkBtn.value = 'Add Link';
+                        addLinkBtn.removeEventListener('click', updateLink);
+
+                    } else {
+                        alert('Please provide link name, URL, and icon URL.');
+                    }
+                });
+            }
+            modal.style.display = 'block'
+        }
+
+        function removeLink(index) {
+            const links = getLinksFromLocalStorage();
+            links.splice(index, 1); // Remove the link at the given index
+            saveLinksToLocalStorage(links);
+            displayLinks(links);
+        }
+
+
+
+
+
+
+    </script>
+
+    <script>
+
+        const youtubeLinkNameInput = document.getElementById('youtubeLinkName');
+        const youtubeLinkURLInput = document.getElementById('youtubeLinkURL');
+
+        openModalBtnYouTube.addEventListener('click', (d) => {
+            myModalYouTube.style.display = 'block'
+            youtubeLinkNameInput.value = ''
+            youtubeLinkURLInput.value = ''
+            addYouTubeLinkBtn.value = 'Save';
+
+        })
+
+
+        function saveYoutubeToLocalStorage(links, name) {
+            localStorage.setItem(name, JSON.stringify(links));
+        }
+
+        // Function to retrieve links from localStorage
+        function getyoutubeFromLocalStorage(name) {
+            const linksData = localStorage.getItem(name);
+            return linksData ? JSON.parse(linksData) : [];
+        }
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const youtubeLinks = getyoutubeFromLocalStorage('talent');
+            displayYouTubeLinks(youtubeLinks, 'youtubeLinkBox', 'talent');
+        });
+
+        const addYouTubeLinkForm = document.querySelector('.add-youtube-link-form');
+
+        addYouTubeLinkForm.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+
+
+            const youtubeLinkName = youtubeLinkNameInput.value;
+            const youtubeLinkURL = youtubeLinkURLInput.value
+
+            if (youtubeLinkName && youtubeLinkURL) {
+                const youtubeLink = {
+                    name: youtubeLinkName,
+                    url: youtubeLinkURL,
+                    thumbnail: getYouTubeThumbnail(youtubeLinkURL) // Get the YouTube thumbnail URL
+                };
+
+                const youtubeLinks = getyoutubeFromLocalStorage('talent');
+                youtubeLinks.push(youtubeLink);
+
+                saveYoutubeToLocalStorage(youtubeLinks, 'talent');
+
+                displayYouTubeLinks(youtubeLinks, 'youtubeLinkBox', 'talent')
+
+                youtubeLinkNameInput.value = '';
+                youtubeLinkURLInput.value = '';
+
+                myModalYouTube.style.display = 'none';
+            } else {
+                alert('Please provide link name and YouTube video URL.');
+            }
+        });
+
+
+        function displayYouTubeLinks(links, name, target) {
+            const youtubeLinkBox = document.getElementById(name);
+            youtubeLinkBox.innerHTML = '';
+
+            links.forEach(function (link, i) {
+                const youtubeLinkItem = document.createElement('div');
+                youtubeLinkItem.className = 'link-item';
+                const youtubeLinkAnchor = document.createElement('a');
+                youtubeLinkAnchor.href = link.url;
+                youtubeLinkAnchor.title = link.name;
+                youtubeLinkAnchor.target = '_blank';
+
+                const youtubeLinkThumbnail = document.createElement('img');
+                youtubeLinkThumbnail.src = link.thumbnail;
+                youtubeLinkThumbnail.alt = 'YouTube Thumbnail';
+
+                youtubeLinkAnchor.appendChild(youtubeLinkThumbnail);
+                youtubeLinkItem.appendChild(youtubeLinkAnchor);
+
+                let btnBox = document.createElement('a');
+                btnBox.classList.add('sort-btn')
+                btnBox.innerText = "||"
+
+                let btndiv = document.createElement('div')
+
+                const editLinkButton = document.createElement('button');
+                editLinkButton.textContent = 'Edit';
+
+                const removeLinkButton = document.createElement('button');
+                removeLinkButton.classList.add('remove-link-btn');
+                removeLinkButton.textContent = 'remove';
+
+                btndiv.appendChild(editLinkButton);
+                btndiv.appendChild(removeLinkButton);
+                btnBox.appendChild(btndiv);
+
+
+                editLinkButton.addEventListener('click', function () {
+                    EditeYoutube(name, `${i}`, target);
+                });
+
+                removeLinkButton.addEventListener('click', (d) => {
+                    console.log('askdfj')
+                    removeYoutube(name, i, target);
+
+                })
+
+
+                youtubeLinkItem.append(btnBox)
+                youtubeLinkBox.appendChild(youtubeLinkItem);
+            });
+
+        }
+
+        function EditeYoutube(names, id, target) {
+            let links = getyoutubeFromLocalStorage(target);
+
+
+            const link = links[id]
+            if (link) {
+                console.log(link)
+                const linkNameInput = document.getElementById('linkName');
+                const linkURLInput = document.getElementById('linkURL');
+
+
+                youtubeLinkNameInput.value = link.name;
+                youtubeLinkURLInput.value = link.url;
+
+
+                addYouTubeLinkBtn.value = 'Update Link';
+
+                addYouTubeLinkBtn.addEventListener('click', function (event) {
+                    event.preventDefault();
+
+                    const updatedLinkName = youtubeLinkNameInput.value;
+                    const updatedLinkURL = youtubeLinkURLInput.value;
+
+
+                    if (updatedLinkName && updatedLinkURL) {
+                        link.name = updatedLinkName;
+                        link.url = updatedLinkURL;
+                        link.thumbnail = getYouTubeThumbnail(updatedLinkURL);
+
+                        myModalYouTube.style.display = 'none'
+
+                        saveYoutubeToLocalStorage(links, target);
+                        console.log(links)
+                        displayYouTubeLinks(links, names, target);
+
+                        updatedLinkName.value = '';
+                        updatedLinkURL.value = '';
+
+                        addYouTubeLinkBtn.value = 'Save';
+
+                    } else {
+                        alert('Please provide link name, URL, and icon URL.');
+                    }
+                });
+            }
+            myModalYouTube.style.display = 'block'
+
+
+
+
+        }
+
+        function removeYoutube(name, index, target) {
+            console.log(name, target)
+            const links = getyoutubeFromLocalStorage(target);
+            links.splice(index, 1); // Remove the link at the given index
+            saveYoutubeToLocalStorage(links, target);
+            displayYouTubeLinks(links, name, target);
+        }
+
+
+
+        function getYouTubeThumbnail(link) {
+            const videoId = extractYouTubeVideoId(link);
+            if (videoId) {
+                return `https://img.youtube.com/vi/${videoId}/maxresdefault.jpg`;
+            }
+            return null;
+        }
+
+        function extractYouTubeVideoId(link) {
+            const videoIdRegex = /(?:youtube(?:-nocookie)?\.com\/(?:[^\/\n\s]+\/\S+\/|(?:v|vi|e(?:mbed)?)\/|\S*?[?&]v=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
+            const match = link.match(videoIdRegex);
+            return match ? match[1] : null;
+        }
+
+    </script>
+
+
+    <script>
+        let youtubeLinkNameindia = document.getElementById('youtubeLinkNameindia')
+        let youtubeLinkURLindia = document.getElementById('youtubeLinkURLindia')
+        let addYouTubeLinkBtnindia = document.getElementById('addYouTubeLinkBtnindia')
+        const addYouTubeLinkFormindia = document.querySelector('.add-youtube-link-form-india');
+
+        openModalBtnindia.addEventListener('click', (d) => {
+            myModalYouTubeindia.style.display = 'block'
+            youtubeLinkNameindia.value = ''
+            youtubeLinkURLindia.value = ''
+            addYouTubeLinkBtnindia.value = 'Save';
+
+        })
+
+        document.addEventListener('DOMContentLoaded', function () {
+            const youtubeLinks = getyoutubeFromLocalStorage('indiatalk');
+            displayYouTubeLinks(youtubeLinks, 'indiatalk', 'indiatalk');
+        });
+
+
+        addYouTubeLinkFormindia.addEventListener('submit', function (event) {
+            event.preventDefault();
+
+            const youtubeLinkName = youtubeLinkNameindia.value;
+            const youtubeLinkURL = youtubeLinkURLindia.value
+
+            if (youtubeLinkName && youtubeLinkURL) {
+                const youtubeLink = {
+                    name: youtubeLinkName,
+                    url: youtubeLinkURL,
+                    thumbnail: getYouTubeThumbnail(youtubeLinkURL) // Get the YouTube thumbnail URL
+                };
+                console.log(youtubeLink)
+
+                const youtubeLinks = getyoutubeFromLocalStorage('indiatalk');
+                youtubeLinks.push(youtubeLink);
+
+                saveYoutubeToLocalStorage(youtubeLinks, 'indiatalk');
+
+                displayYouTubeLinks(youtubeLinks, 'indiatalk', 'indiatalk')
+
+                youtubeLinkNameInput.value = '';
+                youtubeLinkURLInput.value = '';
+
+                myModalYouTube.style.display = 'none';
+            }
+            else {
+                alert('Please provide link name and YouTube video URL.');
+            }
+        });
+
+
+
+
+    </script>
+</body>
+
+</html>
